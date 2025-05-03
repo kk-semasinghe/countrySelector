@@ -1,14 +1,14 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import CountryPage from './pages/countryList'; // Adjust path as necessary
+import { vi } from 'vitest'; // ✅ Import vi from vitest
+import CountryPage from '../src/pages/countryList'; // ✅ Double-check this path
 
 beforeEach(() => {
-  // Clear localStorage before each test
   localStorage.clear();
 
-  // Mock fetch
-  global.fetch = jest.fn(() =>
+  // ✅ Use vi.fn instead of jest.fn
+  global.fetch = vi.fn(() =>
     Promise.resolve({
       json: () =>
         Promise.resolve([
@@ -27,8 +27,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
-  // Cleanup mocks
-  jest.resetAllMocks();
+  // ✅ Use vi.resetAllMocks instead of jest.resetAllMocks
+  vi.resetAllMocks();
 });
 
 test('filters countries based on search input', async () => {
@@ -42,8 +42,7 @@ test('filters countries based on search input', async () => {
   fireEvent.change(input, { target: { value: 'japan' } });
 
   const matches = await screen.findAllByText(/japan/i);
-expect(matches.length).toBeGreaterThan(0);
-
+  expect(matches.length).toBeGreaterThan(0);
 });
 
 test('adds country to favorites and stores in localStorage', async () => {
